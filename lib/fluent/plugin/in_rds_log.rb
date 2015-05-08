@@ -35,44 +35,56 @@ class Fluent::Rds_LogInput < Fluent::Input
   end
 
   private
-  def connect
+  def connect_all
+    @clients = {}
+    @host.split(',').each do |host|
+      @clients[host] = connect(host)
+    end
+  end
+
+  def connect(host)
     begin
-      $log.info "fluent-plugin-rds-log: connecting RDS"
-      @client = Mysql2::Client.new({
-        :host => @host,
+      $log.info "fluent-plugin-rds-log: connecting RDS [#{host}]"
+      client = Mysql2::Client.new({
+        :host => host,
         :port => @port,
         :username => @username,
         :password => @password,
         :reconnect => @auto_reconnect,
         :database => 'mysql'
       })
-      $log.info "fluent-plugin-rds-log: connected RDS"
+      $log.info "fluent-plugin-rds-log: connected RDS [#{host}]"
+      return client
     rescue
-      $log.error "fluent-plugin-rds-log: cannot connect RDS"
-    end
-  end
-  def watch
-    connect
-    while true
-      sleep @refresh_interval
-      output
+      $log.error "fluent-plugin-rds-log: cannot connect RDS [#{host}]"
     end
   end
 
-  def output
-    if @client.nil?
-      connect
-      if @client.nil?
+  def watch
+    connect_all
+    while true
+      sleep @refresh_interval
+      @host.split(',').each do |host|
+        output(host)
+      end
+    end
+  end
+
+  def output(host)
+    client = @clients[host]
+    if client.nil?
+      client = connect(host)
+      if client.nil?
         return
       end
     end
 
-    @client.query("CALL mysql.rds_rotate_#{@log_type}")
+    client.query("CALL mysql.rds_rotate_#{@log_type}")
 
-    output_log_data = @client.query("SELECT * FROM mysql.#{@log_type}_backup", :cast => false)
+    output_log_data = client.query("SELECT * FROM mysql.#{@log_type}_backup", :cast => false)
     output_log_data.each do |row|
       row.delete_if{|key,value| value == ''}
-      row['host'] = @host if @add_host
+      row['host'] = host if @add_host
       Fluent::Engine.emit(tag, Fluent::Engine.now, row)
     end
   end

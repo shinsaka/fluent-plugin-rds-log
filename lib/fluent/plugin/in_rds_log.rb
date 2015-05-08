@@ -9,6 +9,7 @@ class Fluent::Rds_LogInput < Fluent::Input
   config_param :log_type, :string,  :default => nil
   config_param :refresh_interval, :integer, :default => 30
   config_param :auto_reconnect, :bool, :default => true
+  config_param :add_host, :bool, :default => false
 
    def initialize
     super
@@ -71,6 +72,7 @@ class Fluent::Rds_LogInput < Fluent::Input
     output_log_data = @client.query("SELECT * FROM mysql.#{@log_type}_backup", :cast => false)
     output_log_data.each do |row|
       row.delete_if{|key,value| value == ''}
+      row['host'] = @host if @add_host
       Fluent::Engine.emit(tag, Fluent::Engine.now, row)
     end
   end

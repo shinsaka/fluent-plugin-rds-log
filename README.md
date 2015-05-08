@@ -33,6 +33,7 @@
   refresh_interval <number>
   auto_reconnect <true|false>
   tag <tag-name>
+  add_host false # add database hostname in record
 </source>
 ```
 
@@ -48,6 +49,7 @@
   refresh_interval 30
   auto_reconnect true
   tag rds-general-log
+  add_host false # add database hostname in record
 </source>
 
 <match rds-general-log>

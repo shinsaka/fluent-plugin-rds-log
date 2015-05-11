@@ -1,0 +1,16 @@
+<source>
+  type rds_log
+  log_type general_log
+  host endpoint.abcdefghijkl.ap-northeast-1.rds.amazonaws.com
+  username testuser
+  password testuser
+  refresh_interval 30
+  auto_reconnect true
+  tag rds-general-log
+  add_host true
+</source>
+
+<match rds-general-log>
+  type file
+  path /tmp/rds-general-log
+</match>

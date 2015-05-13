@@ -57,6 +57,8 @@ class Fluent::Rds_LogInput < Fluent::Input
       return client
     rescue
       $log.error "fluent-plugin-rds-log: cannot connect RDS [#{host}]"
+      sleep @refresh_interval
+      retry
     end
   end
 
@@ -71,21 +73,26 @@ class Fluent::Rds_LogInput < Fluent::Input
   end
 
   def output(host)
-    client = @clients[host]
-    if client.nil?
-      client = connect(host)
-      if client.nil?
-        return
-      end
-    end
-
-    client.query("CALL mysql.rds_rotate_#{@log_type}")
-
-    output_log_data = client.query("SELECT * FROM mysql.#{@log_type}_backup", :cast => false)
+    output_log_data = query(host)
     output_log_data.each do |row|
       row.delete_if{|key,value| value == ''}
       row['host'] = host if @add_host
       Fluent::Engine.emit(tag, Fluent::Engine.now, row)
+    end
+  end
+
+  def query(host)
+    client = @clients[host]
+    begin
+      client.query("CALL mysql.rds_rotate_#{@log_type}")
+      output_log_data = client.query("SELECT * FROM mysql.#{@log_type}_backup", :cast => false)
+    rescue Exception => e
+      $log.error "fluent-plugin-rds-log: ERROR Occurred!"
+      $log.error "#{e.message}\n#{e.backtrace.join("\n")}"
+      sleep @refresh_interval
+      client = connect(host)
+      @clients[host] = client
+      retry
     end
   end
 end

@@ -5,7 +5,7 @@ class Fluent::Rds_LogInput < Fluent::Input
   config_param :host,     :string,  :default => nil
   config_param :port,     :integer, :default => 3306
   config_param :username, :string,  :default => nil
-  config_param :password, :string,  :default => nil
+  config_param :password, :string,  :default => nil, :secret => true
   config_param :log_type, :string,  :default => nil
   config_param :refresh_interval, :integer, :default => 30
   config_param :auto_reconnect, :bool, :default => true

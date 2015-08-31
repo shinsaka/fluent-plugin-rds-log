@@ -23,7 +23,7 @@ class Fluent::Rds_LogInput < Fluent::Input
 
   def configure(conf)
     super
-    if @log_type.empty?
+    if @log_type.nil?
       $log.error "fluent-plugin-rds-log: missing parameter log_type is {slow_log|general_log}"
     end
   end

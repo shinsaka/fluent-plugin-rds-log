@@ -69,7 +69,7 @@ class Fluent::Rds_LogInput < Fluent::Input
     output_log_data.each do |row|
       row.delete_if{|key,value| value == ''}
       row['host'] = host if @add_host
-      Fluent::Engine.emit(tag, Fluent::Engine.now, row)
+      router.emit(tag, Fluent::Engine.now, row)
     end
     client.close
   end

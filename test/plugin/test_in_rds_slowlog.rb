@@ -13,7 +13,7 @@ class Rds_SlowlogInputTest < Test::Unit::TestCase
   ]
 
   def create_driver(conf = CONFIG)
-    Fluent::Test::InputTestDriver.new(Fluent::Rds_SlowlogInput).configure(conf)
+    Fluent::Test::InputTestDriver.new(Fluent::Rds_LogInput).configure(conf)
   end
 
   def test_configure

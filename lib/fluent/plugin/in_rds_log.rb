@@ -15,6 +15,7 @@ class Fluent::Rds_LogInput < Fluent::Input
   config_param :refresh_interval, :integer, :default => 30
   config_param :auto_reconnect, :bool, :default => true
   config_param :add_host, :bool, :default => false
+  config_param :where, :string, :default => nil
 
    def initialize
     super
@@ -82,7 +83,11 @@ class Fluent::Rds_LogInput < Fluent::Input
   def query(client)
     begin
       client.query("CALL mysql.rds_rotate_#{@log_type}")
-      output_log_data = client.query("SELECT * FROM mysql.#{@log_type}_backup", :cast => false)
+      sql = "SELECT * FROM mysql.#{@log_type}_backup"
+      unless @where.nil?
+        sql += " WHERE #{@where}"
+      end
+      output_log_data = client.query(sql, :cast => false)
     rescue Exception => e
       $log.error "fluent-plugin-rds-log: ERROR Occurred!"
       $log.error "#{e.message}\n#{e.backtrace.join("\n")}"

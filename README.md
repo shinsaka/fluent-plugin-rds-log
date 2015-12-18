@@ -34,6 +34,7 @@
   auto_reconnect <true|false>
   tag <tag-name>
   add_host false # add database hostname in record
+  where <condition> #option
 </source>
 ```
 
@@ -50,6 +51,7 @@
   auto_reconnect true
   tag rds-general-log
   add_host false # add database hostname in record
+  where argument LIKE '%sample_table%'
 </source>
 
 <match rds-general-log>

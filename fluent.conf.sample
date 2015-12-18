@@ -8,6 +8,7 @@
   auto_reconnect true
   tag rds-general-log
   add_host true
+  where argument LIKE '%sample_table%'
 </source>
 
 <match rds-general-log>

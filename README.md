@@ -34,6 +34,7 @@
   auto_reconnect <true|false>
   tag <tag-name>
   add_host false # add database hostname in record
+  where <WHERE clause>
 </source>
 ```
 
@@ -50,6 +51,7 @@
   auto_reconnect true
   tag rds-general-log
   add_host false # add database hostname in record
+  where "command_type = 'Query'"
 </source>
 
 <match rds-general-log>

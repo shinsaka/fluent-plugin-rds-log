@@ -72,6 +72,7 @@ class Fluent::Rds_LogInput < Fluent::Input
     client = connect(host)
     return if client.nil?
     output_log_data = query(client)
+    return if output_log_data.nil?
     output_log_data.each do |row|
       row.delete_if{|key,value| value == ''}
       row['host'] = host if @add_host

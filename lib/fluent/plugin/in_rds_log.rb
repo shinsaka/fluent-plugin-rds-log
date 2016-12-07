@@ -92,6 +92,7 @@ class Fluent::Rds_LogInput < Fluent::Input
     rescue Exception => e
       $log.error "fluent-plugin-rds-log: ERROR Occurred!"
       $log.error "#{e.message}\n#{e.backtrace.join("\n")}"
+      return nil
     end
   end
 end

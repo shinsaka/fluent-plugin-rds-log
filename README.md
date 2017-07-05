@@ -1,9 +1,11 @@
 # Amazon RDS (for MySQL) input plugin for [Fluentd](http://fluentd.org)
 
+[![Gem Version](https://badge.fury.io/rb/fluent-plugin-rds-log.svg)](https://badge.fury.io/rb/fluent-plugin-rds-log)
+
 ## Overview
 - Amazon Web Services RDS(MySQL) general_log and slow_log input plugin.  
 
-##Installation
+## Installation
 
     $ fluent-gem install fluent-plugin-rds-log
 *Maybe, you also need the following packages*

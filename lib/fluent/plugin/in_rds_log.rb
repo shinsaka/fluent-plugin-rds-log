@@ -17,7 +17,7 @@ class Fluent::Rds_LogInput < Fluent::Input
   config_param :add_host, :bool, :default => false
   config_param :where, :string, :default => nil
 
-   def initialize
+  def initialize
     super
     require 'mysql2'
   end

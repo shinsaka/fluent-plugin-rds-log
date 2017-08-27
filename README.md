@@ -3,7 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/fluent-plugin-rds-log.svg)](https://badge.fury.io/rb/fluent-plugin-rds-log)
 
 ## Overview
-- Amazon Web Services RDS(MySQL) general_log and slow_log input plugin.  
+- Amazon Web Services RDS(MySQL) general_log and slow_log input plugin.
 
 ## Installation
 
@@ -62,3 +62,6 @@
 </match>
 ```
 
+## Changes
+### 0.3.0
+- require fluentd version 0.14.0

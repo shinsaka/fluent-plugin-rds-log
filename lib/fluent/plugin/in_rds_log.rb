@@ -1,4 +1,7 @@
-class Fluent::Rds_LogInput < Fluent::Input
+require 'fluent/input'
+require 'mysql2'
+
+class Fluent::Plugin::Rds_LogInput < Fluent::Plugin::Input
   Fluent::Plugin.register_input("rds_log", self)
 
   # Define `router` method to support v0.10.57 or earlier
@@ -19,7 +22,6 @@ class Fluent::Rds_LogInput < Fluent::Input
 
   def initialize
     super
-    require 'mysql2'
   end
 
   def configure(conf)

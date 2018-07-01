@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |gem|
   gem.name          = "fluent-plugin-rds-log"
-  gem.version       = "0.3.0"
+  gem.version       = "0.3.1"
   gem.authors       = ["shinsaka"]
   gem.email         = ["shinx1265@gmail.com"]
   gem.description   = "Amazon RDS slow_log and general_log input plugin for Fluent event collector"

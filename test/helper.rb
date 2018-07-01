@@ -1,29 +1,20 @@
-require 'rubygems'
-require 'bundler'
+require 'bundler/setup'
+require 'test/unit'
+require 'webmock/test_unit'
+require 'simplecov'
 
-begin
-  Bundler.setup(:default, :development)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
-require "test/unit"
-
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-require "fluent/test"
-unless ENV.has_key?("VERBOSE")
-  nulllogger = Object.new
-  nulllogger.instance_eval {|obj|
-    def method_missing(method, *args)
-      #pass
-    end
-  }
-  $log = nulllogger
+SimpleCov.start do
+  add_filter '/test/'
 end
 
-require "fluent/plugin/in_rds_log"
+$LOAD_PATH.unshift(File.join(__dir__, '..', 'lib'))
+$LOAD_PATH.unshift(__dir__)
+require 'fluent/test'
+require 'fluent/test/helpers'
+require 'fluent/test/driver/input'
+require 'fluent/plugin/in_rds_log'
 
 class Test::Unit::TestCase
+  include Fluent::Test::Helpers
+  extend Fluent::Test::Helpers
 end

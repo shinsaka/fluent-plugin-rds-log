@@ -18,5 +18,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "fluentd", ">= 0.14.0", "< 2"
   gem.add_dependency "mysql2",  "~> 0.4.1"
   gem.add_development_dependency 'rake', '~> 10.0', '>= 10.0.4'
-  gem.add_development_dependency 'test-unit', '~> 3.1', '>= 3.1.0'
+  gem.add_development_dependency "test-unit", "~> 3.2"
+  gem.add_development_dependency "webmock", "~>3"
+  gem.add_development_dependency "simplecov", "~>0"
 end

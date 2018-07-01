@@ -27,7 +27,7 @@ class Fluent::Plugin::Rds_LogInput < Fluent::Plugin::Input
   def configure(conf)
     super
     if @log_type.nil?
-      $log.error "fluent-plugin-rds-log: missing parameter log_type is {slow_log|general_log}"
+      log.error "fluent-plugin-rds-log: missing parameter log_type is {slow_log|general_log}"
     end
   end
 
@@ -56,7 +56,7 @@ class Fluent::Plugin::Rds_LogInput < Fluent::Plugin::Input
       })
       return client
     rescue
-      $log.error "fluent-plugin-rds-log: cannot connect RDS [#{host}]"
+      log.error "fluent-plugin-rds-log: cannot connect RDS [#{host}]"
     end
     return nil
   end
@@ -92,8 +92,8 @@ class Fluent::Plugin::Rds_LogInput < Fluent::Plugin::Input
       end
       output_log_data = client.query(sql, :cast => false)
     rescue Exception => e
-      $log.error "fluent-plugin-rds-log: ERROR Occurred!"
-      $log.error "#{e.message}\n#{e.backtrace.join("\n")}"
+      log.error "fluent-plugin-rds-log: ERROR Occurred!"
+      log.error "#{e.message}\n#{e.backtrace.join("\n")}"
       return nil
     end
   end

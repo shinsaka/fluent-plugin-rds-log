@@ -4,10 +4,7 @@ require 'mysql2'
 class Fluent::Plugin::Rds_LogInput < Fluent::Plugin::Input
   Fluent::Plugin.register_input("rds_log", self)
 
-  # Define `router` method to support v0.10.57 or earlier
-  unless method_defined?(:router)
-    define_method("router") { Fluent::Engine }
-  end
+  helpers :timer
 
   config_param :tag,      :string
   config_param :host,     :string,  :default => nil
@@ -33,13 +30,11 @@ class Fluent::Plugin::Rds_LogInput < Fluent::Plugin::Input
 
   def start
     super
-    @watcher = Thread.new(&method(:watch))
+    timer_execute(:in_rds_log_timer, @refresh_interval, &method(:watch))
   end
 
   def shutdown
     super
-    @watcher.terminate
-    @watcher.join
   end
 
   private
@@ -62,11 +57,8 @@ class Fluent::Plugin::Rds_LogInput < Fluent::Plugin::Input
   end
 
   def watch
-    while true
-      @host.split(',').each do |host|
-        output(host)
-      end
-      sleep @refresh_interval
+    @host.split(',').each do |host|
+      output(host)
     end
   end
 

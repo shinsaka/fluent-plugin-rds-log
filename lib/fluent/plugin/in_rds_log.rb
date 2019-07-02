@@ -16,6 +16,7 @@ class Fluent::Plugin::Rds_LogInput < Fluent::Plugin::Input
   config_param :auto_reconnect, :bool, :default => true
   config_param :add_host, :bool, :default => false
   config_param :where, :string, :default => nil
+  config_param :timezone, :string, :default => :utc
 
   def initialize
     super
@@ -47,7 +48,8 @@ class Fluent::Plugin::Rds_LogInput < Fluent::Plugin::Input
         :username => @username,
         :password => @password,
         :reconnect => @auto_reconnect,
-        :database => 'mysql'
+        :database => 'mysql',
+        :database_timezone => @timezone
       })
       return client
     rescue
